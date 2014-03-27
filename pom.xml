@@ -20,13 +20,23 @@
   <dependency>
    <groupId>junit</groupId>
    <artifactId>junit</artifactId>
-   <version>3.8.1</version>
+   <version>4.11</version>
    <scope>test</scope>
   </dependency>
   <dependency>
    <groupId>com.yammer.dropwizard</groupId>
    <artifactId>dropwizard-core</artifactId>
    <version>0.6.2</version>
+  </dependency>
+  <dependency>
+    <groupId>com.google.inject</groupId>
+    <artifactId>guice</artifactId>
+    <version>3.0</version>
+  </dependency>
+  <dependency>
+      <groupId>com.rabbitmq</groupId>
+      <artifactId>amqp-client</artifactId>
+      <version>3.2.4</version>
   </dependency>
  </dependencies>
  <build>
@@ -60,7 +70,7 @@
          implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer" />
         <transformer
          implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-         <mainClass>org.test.service.HelloWorldService</mainClass>
+         <mainClass>org.test.service.CheckoutService</mainClass>
         </transformer>
        </transformers>
       </configuration>
