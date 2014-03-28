@@ -58,11 +58,11 @@ public class RabbitMQ implements MessageQueue{
     @Override
     public void registerCallback() throws IOException {
         
-        ExecutorService executorService = Executors.newFixedThreadPool(20);
+        // ExecutorService executorService = Executors.newFixedThreadPool(20);
         ConnectionFactory factory = new ConnectionFactory();
         factory.setHost("localhost");
         
-        connection = factory.newConnection(executorService);
+        connection = factory.newConnection();
         channel = connection.createChannel();
         
         channel.queueDeclare(RabbitMQ.DELAYED_QUEUE_NAME, true, false, false, null);
