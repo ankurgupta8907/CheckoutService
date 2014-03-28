@@ -25,7 +25,7 @@ public class CheckoutResource {
 
     @GET
     @Timed
-    public Response sayHello(@QueryParam("time") Optional<String> time)
+    public Response checkTime(@QueryParam("time") Optional<String> time)
             throws Exception {
         
         String status = "Completed";
@@ -35,9 +35,9 @@ public class CheckoutResource {
             DateTime prevTime = new DateTime(Long.parseLong(timeVal)+25000);
             DateTime curTime = DateTime.now();
             
-            if (curTime.isAfter(prevTime)) {}
-            else 
+            if (!curTime.isAfter(prevTime)) {
                 throw new TimeException("Not Completed");
+            }
         }
         return new Response(counter.incrementAndGet(), status);
     }

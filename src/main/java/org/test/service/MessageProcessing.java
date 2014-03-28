@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import testing.MessagePublishing;
+
 import com.rabbitmq.client.AMQP;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
@@ -41,10 +43,22 @@ public class MessageProcessing  implements Managed{
             String message = new String(body);
             System.out.println(" [x] Received '" + message + "'");
             
-            RetryRequest retryRequest  = new RetryRequest(msgProcessing);
-            retryRequest.workOnMessage(message);
+            RetryRequest retryRequest  = new RetryRequest();
             
-            this.getChannel().basicAck(envelope.getDeliveryTag(), false);
+            if (retryRequest.workOnMessage(message)) {
+                // Ack the message. 
+                System.out.println("Ack the message\n");
+                this.getChannel().basicAck(envelope.getDeliveryTag(), false);
+            }
+            
+            else {
+                
+                msgProcessing.publishMessage(message);
+                
+                // Nack the message.
+                // System.out.println("Nack the message\n");
+                //this.getChannel().basicNack(envelope.getDeliveryTag(), false, true);
+            }
             
         }
         
@@ -57,11 +71,11 @@ public class MessageProcessing  implements Managed{
 
         ConnectionFactory factory = new ConnectionFactory();
         factory.setHost("localhost");
+        
         connection = factory.newConnection();
         channel = connection.createChannel();
         
         channel.queueDeclare(MessagePublishing.DELAYED_QUEUE_NAME, true, false, false, null);
-        
         channel.basicQos(0);
         
         BasicConsumer consumer= new BasicConsumer(channel, this);

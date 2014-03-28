@@ -7,14 +7,13 @@ import java.net.URL;
 import org.eclipse.jetty.http.HttpStatus;
 
 public class RetryRequest {
-    
-    private MessageProcessing messageProcessing;
-    
-    public RetryRequest(MessageProcessing messageProcessing) {
-        this.messageProcessing = messageProcessing;
-    }
 
-    public void workOnMessage(String message)  {
+    /**
+     * Returns true is the message was successfully processed and false otherwise.
+     * @param message
+     * @return
+     */
+    public boolean workOnMessage(String message)  {
         
         try {
             URL obj = new URL("http://localhost:8080/checkout?time=" + message);
@@ -25,8 +24,9 @@ public class RetryRequest {
             int responseCode = con.getResponseCode();
             
             if (HttpStatus.INTERNAL_SERVER_ERROR_500 == responseCode) { 
-                messageProcessing.publishMessage(message);
+                return false;
             }
+            return true;
         } 
         catch (MalformedURLException e) {
             e.printStackTrace();
@@ -34,6 +34,7 @@ public class RetryRequest {
         catch(Exception e) {
             e.printStackTrace();
         }
+        return false;
     }
 
 }
