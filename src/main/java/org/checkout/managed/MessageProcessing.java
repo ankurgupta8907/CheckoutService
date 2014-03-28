@@ -1,12 +1,12 @@
-package org.test.service;
+package org.checkout.managed;
 
-import queue.MessageQueue;
+import org.checkout.queue.MessageQueue;
 
 import com.yammer.dropwizard.lifecycle.Managed;
 
 public class MessageProcessing  implements Managed{
     
-    MessageQueue queue;
+    private MessageQueue queue;
     @Override
     public void start() throws Exception {
 

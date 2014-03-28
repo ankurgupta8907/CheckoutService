@@ -1,4 +1,6 @@
-package org.test.service;
+package org.checkout.service;
+
+import org.checkout.managed.MessageProcessing;
 
 import com.yammer.dropwizard.Service;
 import com.yammer.dropwizard.config.Bootstrap;

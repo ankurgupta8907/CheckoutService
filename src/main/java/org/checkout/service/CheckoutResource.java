@@ -1,4 +1,4 @@
-package org.test.service;
+package org.checkout.service;
 
 import java.util.concurrent.atomic.AtomicLong;
 

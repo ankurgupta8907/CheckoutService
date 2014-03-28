@@ -1,4 +1,4 @@
-package testing;
+package org.checkout.testing;
 
 
 import java.io.IOException;
@@ -11,14 +11,12 @@ import java.util.NoSuchElementException;
 import org.apache.commons.pool2.ObjectPool;
 import org.apache.commons.pool2.impl.GenericObjectPool;
 import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
+import org.checkout.queue.RabbitMQ;
 import org.joda.time.DateTime;
 
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.MessageProperties;
 public class MessagePublishing implements Runnable{
-    
-    public final static String QUEUE_NAME = "queue";
-    public final static String DELAYED_QUEUE_NAME = "delayed_queue";
     
     /**
      * Shared common object pool.
@@ -84,15 +82,15 @@ public class MessagePublishing implements Runnable{
             channel = pool.borrowObject();
             
             System.out.println("Channel code " + channel.hashCode());
-            channel.queueDeclare(DELAYED_QUEUE_NAME, true, false, false, null);
+            channel.queueDeclare(RabbitMQ.DELAYED_QUEUE_NAME, true, false, false, null);
         
             Map<String, Object> arguments = new HashMap<String, Object>();
             arguments.put("x-message-ttl", 5000);
             arguments.put("x-dead-letter-exchange", "");
-            arguments.put("x-dead-letter-routing-key", DELAYED_QUEUE_NAME );
-            channel.queueDeclare(QUEUE_NAME, true, false, false, arguments);
+            arguments.put("x-dead-letter-routing-key", RabbitMQ.DELAYED_QUEUE_NAME );
+            channel.queueDeclare(RabbitMQ.QUEUE_NAME, true, false, false, arguments);
             
-            channel.basicPublish("", QUEUE_NAME, MessageProperties.PERSISTENT_TEXT_PLAIN, message.getBytes());
+            channel.basicPublish("", RabbitMQ.QUEUE_NAME, MessageProperties.PERSISTENT_TEXT_PLAIN, message.getBytes());
             System.out.println(" [x] Sent '" + message + "'");
             channel.close();
             Thread.sleep(1000);

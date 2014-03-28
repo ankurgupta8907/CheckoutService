@@ -1,4 +1,4 @@
-package org.test.service;
+package org.checkout.queue;
 
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;

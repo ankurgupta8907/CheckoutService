@@ -1,4 +1,4 @@
-package org.test.service;
+package org.checkout.service;
 
 public class TimeException extends Exception {
     

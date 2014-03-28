@@ -1,4 +1,4 @@
-package queue;
+package org.checkout.queue;
 
 public interface MessageQueue {
     

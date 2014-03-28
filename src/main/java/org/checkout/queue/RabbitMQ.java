@@ -1,14 +1,10 @@
-package queue;
+package org.checkout.queue;
 
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-
-import org.test.service.RetryRequest;
-
-import testing.MessagePublishing;
 
 import com.rabbitmq.client.AMQP;
 import com.rabbitmq.client.Channel;
@@ -23,6 +19,8 @@ public class RabbitMQ implements MessageQueue{
 
     private Connection connection;    
     private Channel channel;
+    public final static String DELAYED_QUEUE_NAME = "delayed_queue";
+    public final static String QUEUE_NAME = "queue";
    
     public static class BasicConsumer extends DefaultConsumer {
         
@@ -67,11 +65,11 @@ public class RabbitMQ implements MessageQueue{
         connection = factory.newConnection(executorService);
         channel = connection.createChannel();
         
-        channel.queueDeclare(MessagePublishing.DELAYED_QUEUE_NAME, true, false, false, null);
+        channel.queueDeclare(RabbitMQ.DELAYED_QUEUE_NAME, true, false, false, null);
         channel.basicQos(0);
         
         BasicConsumer consumer= new BasicConsumer(channel, this);
-        channel.basicConsume(MessagePublishing.DELAYED_QUEUE_NAME, false, consumer);
+        channel.basicConsume(RabbitMQ.DELAYED_QUEUE_NAME, false, consumer);
         
         System.out.println("Started the connection to rabbitMQ");
     }
@@ -91,10 +89,10 @@ public class RabbitMQ implements MessageQueue{
         Map<String, Object> arguments = new HashMap<String, Object>();
         arguments.put("x-message-ttl", delay*1000);
         arguments.put("x-dead-letter-exchange", "");
-        arguments.put("x-dead-letter-routing-key", MessagePublishing.DELAYED_QUEUE_NAME );
-        channel.queueDeclare(MessagePublishing.QUEUE_NAME, true, false, false, arguments);
+        arguments.put("x-dead-letter-routing-key", RabbitMQ.DELAYED_QUEUE_NAME );
+        channel.queueDeclare(RabbitMQ.QUEUE_NAME, true, false, false, arguments);
             
-        channel.basicPublish("", MessagePublishing.QUEUE_NAME, MessageProperties.PERSISTENT_TEXT_PLAIN, message.getBytes());
+        channel.basicPublish("", RabbitMQ.QUEUE_NAME, MessageProperties.PERSISTENT_TEXT_PLAIN, message.getBytes());
         System.out.println(" [x] Sent '" + message + "'");
       
         
