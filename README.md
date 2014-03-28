@@ -1,4 +1,4 @@
-CoachingClass
+CheckoutService
 =============
 
-Coaching class to try out different technologies
+Dummy implementation of checkout service.

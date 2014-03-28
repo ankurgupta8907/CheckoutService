@@ -16,6 +16,8 @@ public class RetryRequest {
     public boolean workOnMessage(String message)  {
         
         try {
+            
+            // This whole thing should be done by the thick client of checkout service.
             URL obj = new URL("http://localhost:8080/checkout?time=" + message);
             
             HttpURLConnection con = (HttpURLConnection) obj.openConnection();
